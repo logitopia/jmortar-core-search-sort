@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractUnitTest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jmortar-core-search-sort</a> &gt; <a href="index.source.html" class="el_package">com.logitopia.jmortar.core.test</a> &gt; <span class="el_source">AbstractUnitTest.java</span></div><h1>AbstractUnitTest.java</h1><pre class="source lang-java linenums">/*
+ *     JMortar - Tools to make your Java life easier.
+ *     Copyright (C) 2015-2017 Stephen Cheesley
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+ */
+package com.logitopia.jmortar.core.test;
+
+import com.logitopia.jmortar.core.test.exception.PrivateTestMethodException;
+import com.logitopia.jmortar.core.test.exception.TestFieldException;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+/**
+ * The &lt;tt&gt;AbstractUniTest&lt;/tt&gt; is a unit test that provides access to the subject and private
+ * subject resources.
+ *
+ * @param &lt;T&gt; The subject type.
+ * @author Stephen Cheesley
+ */
+<span class="nc" id="L33">public abstract class AbstractUnitTest&lt;T&gt; {</span>
+
+    /**
+     * The subject of the unit test (the class that we will be testing on).
+     */
+    private T subject;
+
+    /**
+     * Get the subject.
+     *
+     * @return The subject of this test.
+     */
+    public T getSubject() {
+<span class="nc" id="L46">        return subject;</span>
+    }
+
+    /**
+     * Set the test subject.
+     *
+     * @param newSubject The subject of this test.
+     */
+    public void setSubject(final T newSubject) {
+<span class="nc" id="L55">        subject = newSubject;</span>
+<span class="nc" id="L56">    }</span>
+
+    /**
+     * Get the value from a private field on the test subject class.
+     *
+     * @param fieldName The name of the field we wish to get the value for.
+     * @return The Object representing the value of the field.
+     * @throws TestFieldException thrown when the field is missing or inaccessible.
+     */
+    public Object getFieldValue(final String fieldName) throws TestFieldException {
+        try {
+<span class="nc" id="L67">            Field field = getField(subject.getClass(), fieldName);</span>
+<span class="nc" id="L68">            field.setAccessible(true);</span>
+
+<span class="nc" id="L70">            return field.get(subject);</span>
+<span class="nc" id="L71">        } catch (NoSuchFieldException e) {</span>
+<span class="nc" id="L72">            String msg = new StringBuilder(&quot;The field &quot;)</span>
+<span class="nc" id="L73">                    .append(fieldName)</span>
+<span class="nc" id="L74">                    .append(&quot; was missing from the test object of type &quot;)</span>
+<span class="nc" id="L75">                    .append(subject.getClass().getSimpleName())</span>
+<span class="nc" id="L76">                    .toString();</span>
+<span class="nc" id="L77">            throw new TestFieldException(msg, e);</span>
+<span class="nc" id="L78">        } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L79">            String msg = new StringBuilder(&quot;Unable to access the field &quot;)</span>
+<span class="nc" id="L80">                    .append(fieldName)</span>
+<span class="nc" id="L81">                    .append(&quot; from the test object of type &quot;)</span>
+<span class="nc" id="L82">                    .append(subject.getClass().getSimpleName())</span>
+<span class="nc" id="L83">                    .toString();</span>
+<span class="nc" id="L84">            throw new TestFieldException(msg, e);</span>
+        }
+    }
+
+    private Field getField(final Class clazz, final String fieldName) throws NoSuchFieldException {
+        Field declaredField;
+        try {
+<span class="nc" id="L91">            declaredField = clazz.getDeclaredField(fieldName);</span>
+<span class="nc" id="L92">        } catch (NoSuchFieldException e) {</span>
+<span class="nc" id="L93">            Class superClass = clazz.getSuperclass();</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">            if (superClass == null) {</span>
+<span class="nc" id="L95">                throw e;</span>
+            }
+<span class="nc" id="L97">            declaredField = getField(superClass, fieldName);</span>
+<span class="nc" id="L98">        }</span>
+<span class="nc" id="L99">        return declaredField;</span>
+    }
+
+    /**
+     * Execute a private method on the given subject.
+     *
+     * @param methodName     The name of the method on the subject to execute.
+     * @param parameterTypes The types of the parameters that the method uses.
+     * @param parameters     The parameters to be passed to the method.
+     * @return The response from the private method.
+     * @throws PrivateTestMethodException An exception occurs when we can't reflectively access the private method.
+     */
+    public Object executePrivateMethod(final String methodName,
+                                       final Class[] parameterTypes,
+                                       final Object[] parameters) throws PrivateTestMethodException {
+        try {
+<span class="nc" id="L115">            Method privateMethod = subject.getClass().getDeclaredMethod(methodName, parameterTypes);</span>
+<span class="nc" id="L116">            privateMethod.setAccessible(true);</span>
+
+<span class="nc" id="L118">            return privateMethod.invoke(subject, parameters);</span>
+<span class="nc" id="L119">        } catch (Exception ex) {</span>
+<span class="nc" id="L120">            throw new PrivateTestMethodException(ex);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.0.201801022044</span></div></body></html>

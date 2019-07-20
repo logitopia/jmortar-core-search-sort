@@ -32,7 +32,7 @@ bintray {
     key = bintrayKey
     pkg {
         repo = 'jmortar-release'
-        name = 'jmortar-core-test'
+        name = 'jmortar-core-search-sort'
         userOrg = 'logitopia'
         publications = ['publishToBintray']
     }

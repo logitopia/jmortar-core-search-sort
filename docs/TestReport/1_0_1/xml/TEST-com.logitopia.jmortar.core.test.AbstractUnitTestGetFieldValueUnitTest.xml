@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.logitopia.jmortar.core.test.AbstractUnitTestGetFieldValueUnitTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2018-11-25T15:11:48" hostname="DESKTOP-2PUINBP" time="0.002">
+  <properties/>
+  <testcase name="testPrimitiveSuccess" classname="com.logitopia.jmortar.core.test.AbstractUnitTestGetFieldValueUnitTest" time="0.0"/>
+  <testcase name="testMissingField" classname="com.logitopia.jmortar.core.test.AbstractUnitTestGetFieldValueUnitTest" time="0.0"/>
+  <testcase name="testBasicSuccess" classname="com.logitopia.jmortar.core.test.AbstractUnitTestGetFieldValueUnitTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
