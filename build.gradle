@@ -1,16 +1,143 @@
-plugins {
-    id 'java'
+import groovy.json.JsonSlurper
+import groovy.json.JsonBuilder
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.1"
+    }
 }
 
-group 'com.logitopia'
-version '1.0.0-SNAPSHOT'
+apply plugin: 'java-library'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'jacoco'
+
+group = 'com.logitopia'
+version = '0.0.1-SNAPSHOT'
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+bintray {
+    user = bintrayUser
+    key = bintrayKey
+    pkg {
+        repo = 'jmortar-release'
+        name = 'jmortar-core-test'
+        userOrg = 'logitopia'
+        publications = ['publishToBintray']
+    }
+    publish = true
+}
 
 repositories {
-    mavenCentral()
+    maven { url "http://repo.maven.apache.org/maven2" }
+
+    mavenLocal()
+    jcenter()
+}
+
+jacoco {
+    toolVersion = "0.8.4"
+    //reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+publishing {
+    publications {
+        publishToBintray(MavenPublication) {
+            from components.java
+            groupId 'com.logitopia'
+            artifactId 'jmortar-core-search-sort'
+            version version
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
 
 dependencies {
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/reports/jacoco/jacocoHtml")
+    }
+}
+
+task buildJavadoc( type : Javadoc) {
+    group 'Create a release'
+    description 'Builds all required Javadoc and outputs it to the sites directory that it is published.'
+
+    // Make a directory for this release
+    def outputDir = "docs/javadoc/${version.replaceAll("\\."  ,  "_")}"
+    File versionDir = new File(outputDir)
+    versionDir.mkdirs()
+
+    // Build javadoc for all of the Java source (non-optional)
+    source = sourceSets.main.allJava
+    classpath = configurations.compile
+
+    destinationDir = versionDir
+}
+
+task testReports( type : Test ) {
+    group 'Create a release'
+    description 'Runs test reports and outputs them to the sites directory so that they are published.'
+
+    // Store the test reports into our documentation site
+    reports.junitXml.destination = new File("docs/TestReport/${version.replaceAll("\\."  ,  "_")}/xml")
+    reports.html.destination = new File("docs/TestReport/${version.replaceAll("\\."  ,  "_")}")
+}
+
+task testCoverage( type: JacocoReport ) {
+    group 'Create a release'
+    description 'Run the test coverate reports and output them to the sites directory.'
+
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    classDirectories =  files(sourceSets.main.output)
+    executionData = files(jacocoTestReport.executionData)
+
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("docs/jacoco/${version.replaceAll("\\.", "_")}/jacocoHtml")
+    }
+}
+
+task writeReleaseVersion() {
+    group 'Create a release'
+    description 'Write the latest release number to the supported_releases file'
+
+    def releaseFile = new File("docs/supported_releases.json")
+    def releases = new JsonSlurper().parseText(releaseFile.text)
+
+    if (!releases.contains(version)) {
+        releases.add(version)
+    }
+
+    releaseFile.write(new JsonBuilder(releases.toSorted { a, b -> b <=> a }).toPrettyString())
+}
+
+task prepareRelease() {
+    dependsOn 'testReports'
+    dependsOn 'testCoverage'
+    dependsOn 'buildJavadoc'
+    dependsOn 'writeReleaseVersion'
+
+    group 'Create a release'
+    description 'Creates a release by generating the necessary developer documentation'
 }
