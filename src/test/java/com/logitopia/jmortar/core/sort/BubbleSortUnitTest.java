@@ -13,7 +13,7 @@ public class BubbleSortUnitTest {
     private BubbleSort<Integer> subject = new BubbleSort<>();
 
     @Test
-    public void testBasicSuccess() throws InterruptedException {
+    public void testBasicSuccess() {
         Integer[] input = new Integer[] {5, 23, 8, 12, 3, 6, 1, 9, 52, 4, 16, 25};
         int inputLength = input.length;
         Integer[] expected = new Integer[] {1, 3, 4, 5, 6, 8, 9, 12, 16, 23, 25, 52};
