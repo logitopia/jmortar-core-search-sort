@@ -61,7 +61,7 @@ public class SortPerformanceUnitTest {
     @Test(timeout = 100)
     public void testBubbleSortPerformance() {
         long start = System.currentTimeMillis();
-        BubbleSort<Integer> sort = new BubbleSort<>();
+        Sort<Integer> sort = new BubbleSort<>();
         sort.sort(TEST_PRIMATIVE_DATA, (first, second) -> first > second);
         long end = System.currentTimeMillis();
         System.out.println("Sort took " + (end - start) + " MilliSeconds");

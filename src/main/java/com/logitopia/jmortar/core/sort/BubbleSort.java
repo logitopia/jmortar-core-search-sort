@@ -7,8 +7,12 @@ import com.logitopia.jmortar.core.comparator.Comparator;
  *
  * @param <T> The type of item being sorted
  */
-public class BubbleSort<T> implements Sort {
+public class BubbleSort<T> implements Sort<T> {
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void sort(T[] input, Comparator<T> comparator) {
         int length = input.length;
         int i, j;

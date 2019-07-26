@@ -10,7 +10,7 @@ import static org.junit.Assert.assertArrayEquals;
  */
 public class BubbleSortUnitTest {
 
-    private BubbleSort<Integer> subject = new BubbleSort<>();
+    private Sort<Integer> subject = new BubbleSort<>();
 
     @Test
     public void testBasicSuccess() {
