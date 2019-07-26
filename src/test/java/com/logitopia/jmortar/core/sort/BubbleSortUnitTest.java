@@ -5,6 +5,9 @@ import org.junit.Test;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 
+/**
+ * Basic unit testing of the <tt>BubbleSort</tt> implementation.
+ */
 public class BubbleSortUnitTest {
 
     private BubbleSort subject = new BubbleSort();
