@@ -1,5 +1,6 @@
 package com.logitopia.jmortar.core.sort;
 
+import com.logitopia.jmortar.core.comparator.Comparator;
 import org.junit.Test;
 
 /**
@@ -7,10 +8,9 @@ import org.junit.Test;
  */
 public class SortPerformanceUnitTest {
 
-    private static final int[] TEST_PRIMATIVE_DATA = new int[]{359, 704, 855, 88, 264, 135, 34, 902, 840, 126, 193, 907,
-            255, 500, 536, 100, 388, 70, 487, 775, 802, 556, 245, 894, 228, 226, 804, 810, 829, 61, 497, 788, 930, 23,
-            581, 498, 73, 687, 208,
-            838, 90, 241, 69, 800, 285, 103, 371, 678, 493, 10, 803, 62, 618, 211, 429, 636, 965, 604, 531, 690,
+    private static final Integer[] TEST_PRIMATIVE_DATA = new Integer[]{359, 704, 855, 88, 264, 135, 34, 902, 840, 126,
+            193, 907, 255, 500, 536, 100, 388, 70, 487, 775, 802, 556, 245, 894, 228, 226, 804, 810, 829, 61, 497, 788,
+            581, 498, 73, 687, 208, 838, 90, 241, 69, 800, 285, 103, 371, 678, 493, 10, 803, 62, 618, 211, 429, 636,
             394, 434, 790, 580, 974, 727, 993, 608, 578, 468, 485, 446, 563, 117, 210, 7, 702, 170, 270, 335, 238,
             459, 318, 289, 593, 519, 613, 764, 748, 922, 99, 460, 472, 351, 310, 348, 866, 644, 731, 202, 527, 342,
             625, 968, 616, 792, 809, 901, 433, 880, 121, 494, 917, 150, 747, 550, 424, 881, 726, 273, 147, 185, 32,
@@ -56,13 +56,13 @@ public class SortPerformanceUnitTest {
             859, 71, 78, 302, 203, 509, 826, 994, 722, 206, 963, 768, 189, 187, 845, 217, 437, 801, 480, 155, 280
             , 479, 988, 463, 841, 871, 743, 518, 946, 620, 654, 674, 565, 469, 12, 615, 684, 643, 908, 945, 587,
             624, 720, 777, 767, 26, 694, 925, 66, 614, 523, 473, 225, 805, 522, 786, 227, 758, 330, 837, 701, 204
-            , 705, 171, 200, 502, 941, 541, 56};
+            , 705, 171, 200, 502, 941, 541, 56, 965, 604, 531, 690, 930, 23,};
 
-    @Test(timeout = 20)
+    @Test(timeout = 100)
     public void testBubbleSortPerformance() {
         long start = System.currentTimeMillis();
-        BubbleSort sort = new BubbleSort();
-        sort.sort(TEST_PRIMATIVE_DATA);
+        BubbleSort<Integer> sort = new BubbleSort<>();
+        sort.sort(TEST_PRIMATIVE_DATA, (first, second) -> first > second);
         long end = System.currentTimeMillis();
         System.out.println("Sort took " + (end - start) + " MilliSeconds");
     }
