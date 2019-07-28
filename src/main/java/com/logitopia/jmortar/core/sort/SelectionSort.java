@@ -17,7 +17,7 @@ public class SelectionSort<T> implements Sort<T> {
      * {@inheritDoc}
      */
     @Override
-    public void sort(T[] itemsToBeSorted, Comparator<T> comparator) {
+    public synchronized void sort(T[] itemsToBeSorted, Comparator<T> comparator) {
         for(int index = 0; index < itemsToBeSorted.length; index++) {
             int smallestLocation = index;
             // find the smallest
