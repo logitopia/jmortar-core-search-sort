@@ -2,10 +2,6 @@ package com.logitopia.jmortar.core.sort;
 
 import com.logitopia.jmortar.core.comparator.Comparator;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Sorts the given array of items using a selection sort algorithm.
  *
