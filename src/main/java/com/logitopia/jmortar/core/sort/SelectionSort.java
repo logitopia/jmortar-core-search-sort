@@ -18,23 +18,21 @@ public class SelectionSort<T> implements Sort<T> {
      */
     @Override
     public void sort(T[] itemsToBeSorted, Comparator<T> comparator) {
-        List<T> toBeSorted = new ArrayList<>(Arrays.asList(itemsToBeSorted));
-        for(int index = 0; index < toBeSorted.size(); index++) {
+        for(int index = 0; index < itemsToBeSorted.length; index++) {
             int smallestLocation = index;
             // find the smallest
-            T smallest = toBeSorted.get(index);
-            for (int i = smallestLocation; i < toBeSorted.size(); i++) {
-                T element = toBeSorted.get(i);
+            T smallest = itemsToBeSorted[index];
+            for (int i = smallestLocation; i < itemsToBeSorted.length; i++) {
+                T element = itemsToBeSorted[i];
                 if (comparator.compare(smallest, element)) {
                     smallestLocation = i;
-                    smallest = toBeSorted.get(smallestLocation);
+                    smallest = itemsToBeSorted[smallestLocation];
                 }
             }
-            toBeSorted.remove(smallestLocation);
-            toBeSorted.add(index, smallest);
+            // Swap Values around...
+            T temp = itemsToBeSorted[index];
+            itemsToBeSorted[index] = smallest;
+            itemsToBeSorted[smallestLocation] = temp;
         }
-
-        // TODO - The original passed in array needs to be replaced with the content from the List.
-        itemsToBeSorted = (T[]) toBeSorted.toArray();
     }
 }
