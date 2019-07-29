@@ -1,6 +1,5 @@
 package com.logitopia.jmortar.core.sort;
 
-import com.logitopia.jmortar.core.comparator.Comparator;
 import org.junit.Test;
 
 /**
@@ -62,6 +61,15 @@ public class SortPerformanceUnitTest {
     public void testBubbleSortPerformance() {
         long start = System.currentTimeMillis();
         Sort<Integer> sort = new BubbleSort<>();
+        sort.sort(TEST_PRIMATIVE_DATA, (first, second) -> first > second);
+        long end = System.currentTimeMillis();
+        System.out.println("Sort took " + (end - start) + " MilliSeconds");
+    }
+
+    @Test(timeout = 100)
+    public void testSelectionSortPerformance() {
+        long start = System.currentTimeMillis();
+        Sort<Integer> sort = new SelectionSort<>();
         sort.sort(TEST_PRIMATIVE_DATA, (first, second) -> first > second);
         long end = System.currentTimeMillis();
         System.out.println("Sort took " + (end - start) + " MilliSeconds");
