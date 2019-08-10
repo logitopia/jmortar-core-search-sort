@@ -25,29 +25,57 @@ public class ParallelMergeSort<T> implements Sort<T> {
         int arrayLength = itemsToBeSorted.length;
         int half = arrayLength / 2;
 
-        // TODO - Split the array into two halves
+        /* TODO - NEW IDEA - Take each element of the original array as a "Single Element List". Then simply build
+        the list up from there WITHOUT needing to expensively split it first.
+         */
+        // TODO - Break the array into two element lists and feed to the reducer...
+//        List<T> test;
+//        Math.min()
+    }
 
-        // TODO - Call this method recursively on the two split lists
-        // TODO - Merge the sorted tw o halves
+    /**
+     * Reduces a given list of lists by merging them off. If there is an odd remainder, it will be bolted on to the
+     * end of the result and reduced in the next step.
+     *
+     * @param lists The list of lists that we wish to reduce by merging.
+     * @param comparator A strategy that we use to compare two elements.
+     * @return A reduced list of lists where small lists have been merged into a smaller set of larger ones.
+     */
+    private List<List<T>> reducer(List<List<T>> lists, Comparator<T> comparator) {
+        List<List<T>> result = new ArrayList<>();
+        Iterator<List<T>> input = lists.iterator();
+
+        while(input.hasNext()) {
+            List<T> first = input.next();
+
+            // Odd Element - Add to result and skip
+            if (!input.hasNext()) {
+                result.add(first);
+                continue;
+            }
+
+            List<T> second = input.next();
+            result.add(mergeSortedLists(first, second, comparator));
+        }
+
+        return result;
     }
 
     /**
      * Merge two "sorted" lists by continuously comparing the first element of each list until there are no elements
      * left. This merges the elements of the two lists, whilst sorting them at the same time.
-     * @param first The first of two lists that we wish to merge.
+     *
+     * @param first  The first of two lists that we wish to merge.
      * @param second The second of two lists that we wish to merge.
      * @return The "merged" and sorted lists.
      */
-    private List<T> mergeSortedLists(T[] first, T[] second, Comparator<T> comparator) {
+    private List<T> mergeSortedLists(List<T> first, List<T> second, Comparator<T> comparator) {
         List<T> result = new ArrayList<>();
 
-        List<T> firstList = new ArrayList<>(Arrays.asList(first));
-        List<T> secondList = new ArrayList<>(Arrays.asList(second));
-
-        Iterator<T> firstListIterator = firstList.iterator();
-        while(firstListIterator.hasNext()) {
+        Iterator<T> firstListIterator = first.iterator();
+        while (firstListIterator.hasNext()) {
             T firstElement = firstListIterator.next();
-            T secondElement = secondList.get(0);
+            T secondElement = second.get(0);
 
             /* If the first "sorted" list still has elements, but the second shorter list has run out, then we just
                continue adding the remaining elements from the first list to the result.*/
@@ -58,7 +86,7 @@ public class ParallelMergeSort<T> implements Sort<T> {
 
             if (comparator.compare(firstElement, secondElement)) {
                 result.add(secondElement);
-                secondList.remove(0);
+                second.remove(0);
             } else {
                 result.add(firstElement);
                 firstListIterator.remove();
@@ -67,8 +95,8 @@ public class ParallelMergeSort<T> implements Sort<T> {
 
         /* If the second "sorted" list has elements left, add them to the result (they will be higher and in order than
            the final result element. */
-        if (secondList.size() > 0) {
-            result.addAll(secondList);
+        if (second.size() > 0) {
+            result.addAll(second);
         }
 
         return result;
