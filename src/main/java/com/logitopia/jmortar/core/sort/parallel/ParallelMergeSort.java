@@ -78,33 +78,26 @@ public class ParallelMergeSort<T> implements Sort<T> {
         Iterator<T> firstListIterator = first.iterator();
 
         boolean retrieveFirstElement = true;
-        boolean retrieveSecondElement = true;
         T firstElement = null;
-        T secondElement = null;
-        while (result.size() != expectedSize) { // TODO - BUG - if we're stuck on the last
+        T secondElement;
+        while (result.size() != expectedSize) {
             if (retrieveFirstElement) {
                 firstElement = firstListIterator.next();
                 retrieveFirstElement = false;
             }
-
-            if (retrieveSecondElement) {
-                secondElement = second.get(0);
-            }
-
 
             /* If the first "sorted" list still has elements, but the second shorter list has run out, then we just
                continue adding the remaining elements from the first list to the result.*/
             if (second.size() == 0) {
                 result.add(firstElement);
                 continue;
+            } else {
+                secondElement = second.get(0);
             }
 
             if (comparator.compare(firstElement, secondElement)) {
                 result.add(secondElement);
                 second.remove(0);
-                if (second.size() == 0) {
-                    retrieveSecondElement = false;
-                }
             } else {
                 result.add(firstElement);
                 firstListIterator.remove();
