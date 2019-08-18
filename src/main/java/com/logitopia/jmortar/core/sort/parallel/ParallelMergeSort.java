@@ -76,14 +76,11 @@ public class ParallelMergeSort<T> implements Sort<T> {
         int expectedSize = first.size() + second.size();
 
         Iterator<T> firstListIterator = first.iterator();
-
-        boolean retrieveFirstElement = true;
         T firstElement = null;
         T secondElement;
         while (result.size() != expectedSize) {
-            if (retrieveFirstElement) {
+            if (firstListIterator.hasNext()) {
                 firstElement = firstListIterator.next();
-                retrieveFirstElement = false;
             }
 
             /* If the first "sorted" list still has elements, but the second shorter list has run out, then we just
@@ -101,7 +98,6 @@ public class ParallelMergeSort<T> implements Sort<T> {
             } else {
                 result.add(firstElement);
                 firstListIterator.remove();
-                retrieveFirstElement = true;
             }
         }
 
