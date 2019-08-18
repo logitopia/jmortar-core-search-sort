@@ -41,5 +41,13 @@ public class ParallelMergeSortMergeSortedListsUnitTest extends AbstractUnitTest<
         List<Integer> result = (List<Integer>) resultObj;
 
         assertEquals("Does the list contain the correct number of results?", 4, result.size());
+        testOrder(result);
+    }
+
+    private void testOrder(List<Integer> result) {
+        assertEquals("Does the first element contain the expected value?", (Integer) 4, result.get(0));
+        assertEquals("Does the second element contain the expected value?", (Integer) 5, result.get(1));
+        assertEquals("Does the third element contain the expected value?", (Integer) 7, result.get(2));
+        assertEquals("Does the fourth element contain the expected value?", (Integer) 8, result.get(3));
     }
 }
