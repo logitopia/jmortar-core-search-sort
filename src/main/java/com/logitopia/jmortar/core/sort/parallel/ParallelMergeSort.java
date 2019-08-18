@@ -1,5 +1,6 @@
 package com.logitopia.jmortar.core.sort.parallel;
 
+import com.google.common.collect.Lists;
 import com.logitopia.jmortar.core.comparator.Comparator;
 import com.logitopia.jmortar.core.sort.Sort;
 
@@ -7,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * An implementation of <tt>Sort</tt> that uses a merge sort technique to sort the required input. This
@@ -21,16 +24,15 @@ public class ParallelMergeSort<T> implements Sort<T> {
      */
     @Override
     public void sort(T[] itemsToBeSorted, Comparator<T> comparator) {
-        // TODO - Find the midpoint for the given array
-        int arrayLength = itemsToBeSorted.length;
-        int half = arrayLength / 2;
-
         /* TODO - NEW IDEA - Take each element of the original array as a "Single Element List". Then simply build
         the list up from there WITHOUT needing to expensively split it first.
          */
+
         // TODO - Break the array into two element lists and feed to the reducer...
-//        List<T> test;
-//        Math.min()
+        List<T> input = new ArrayList<>(Arrays.asList(itemsToBeSorted));
+        List<List<T>> partitioned = Lists.partition(input, 2);
+        List<List<T>> result = reducer(partitioned, comparator);
+        System.out.println(2);
     }
 
     /**
@@ -71,15 +73,28 @@ public class ParallelMergeSort<T> implements Sort<T> {
      */
     private List<T> mergeSortedLists(List<T> first, List<T> second, Comparator<T> comparator) {
         List<T> result = new ArrayList<>();
+        int expectedSize = first.size() + second.size();
 
         Iterator<T> firstListIterator = first.iterator();
-        while (firstListIterator.hasNext()) {
-            T firstElement = firstListIterator.next();
-            T secondElement = second.get(0);
+
+        boolean retrieveFirstElement = true;
+        boolean retrieveSecondElement = true;
+        T firstElement = null;
+        T secondElement = null;
+        while (result.size() != expectedSize) { // TODO - BUG - if we're stuck on the last
+            if (retrieveFirstElement) {
+                firstElement = firstListIterator.next();
+                retrieveFirstElement = false;
+            }
+
+            if (retrieveSecondElement) {
+                secondElement = second.get(0);
+            }
+
 
             /* If the first "sorted" list still has elements, but the second shorter list has run out, then we just
                continue adding the remaining elements from the first list to the result.*/
-            if (secondElement == null) {
+            if (second.size() == 0) {
                 result.add(firstElement);
                 continue;
             }
@@ -87,9 +102,13 @@ public class ParallelMergeSort<T> implements Sort<T> {
             if (comparator.compare(firstElement, secondElement)) {
                 result.add(secondElement);
                 second.remove(0);
+                if (second.size() == 0) {
+                    retrieveSecondElement = false;
+                }
             } else {
                 result.add(firstElement);
                 firstListIterator.remove();
+                retrieveFirstElement = true;
             }
         }
 
