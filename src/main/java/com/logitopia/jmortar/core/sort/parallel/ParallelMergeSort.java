@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * An implementation of <tt>Sort</tt> that uses a merge sort technique to sort the required input. This
@@ -39,7 +37,7 @@ public class ParallelMergeSort<T> implements Sort<T> {
      * Reduces a given list of lists by merging them off. If there is an odd remainder, it will be bolted on to the
      * end of the result and reduced in the next step.
      *
-     * @param lists The list of lists that we wish to reduce by merging.
+     * @param lists      The list of lists that we wish to reduce by merging.
      * @param comparator A strategy that we use to compare two elements.
      * @return A reduced list of lists where small lists have been merged into a smaller set of larger ones.
      */
@@ -47,7 +45,7 @@ public class ParallelMergeSort<T> implements Sort<T> {
         List<List<T>> result = new ArrayList<>();
         Iterator<List<T>> input = lists.iterator();
 
-        while(input.hasNext()) {
+        while (input.hasNext()) {
             List<T> first = input.next();
 
             // Odd Element - Add to result and skip
@@ -78,9 +76,11 @@ public class ParallelMergeSort<T> implements Sort<T> {
         Iterator<T> firstListIterator = first.iterator();
         T firstElement = null;
         T secondElement;
+        boolean firstListCycle = true;
         while (result.size() != expectedSize) {
-            if (firstListIterator.hasNext()) {
+            if (firstListIterator.hasNext() && firstListCycle) {
                 firstElement = firstListIterator.next();
+                firstListCycle = false;
             }
 
             /* If the first "sorted" list still has elements, but the second shorter list has run out, then we just
@@ -97,7 +97,12 @@ public class ParallelMergeSort<T> implements Sort<T> {
                 second.remove(0);
             } else {
                 result.add(firstElement);
-                firstListIterator.remove();
+                firstListCycle = true;
+                if (firstListIterator.hasNext()) {
+                    firstListIterator.remove();
+                } else {
+                    break;
+                }
             }
         }
 
