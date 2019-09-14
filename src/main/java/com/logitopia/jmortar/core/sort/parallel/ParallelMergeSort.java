@@ -87,6 +87,7 @@ public class ParallelMergeSort<T> implements Sort<T> {
                continue adding the remaining elements from the first list to the result.*/
             if (second.size() == 0) {
                 result.add(firstElement);
+                firstListCycle = true;
                 continue;
             } else {
                 secondElement = second.get(0);
