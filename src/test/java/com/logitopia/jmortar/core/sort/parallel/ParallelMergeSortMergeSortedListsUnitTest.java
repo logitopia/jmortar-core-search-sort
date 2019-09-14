@@ -52,7 +52,7 @@ public class ParallelMergeSortMergeSortedListsUnitTest extends AbstractUnitTest<
     }
 
     @Test
-    public void testUnevenList() throws PrivateTestMethodException {
+    public void testSmallerLeftList() throws PrivateTestMethodException {
         List<Integer> first = new ArrayList<>();
         first.add(2);
         first.add(5);
@@ -70,7 +70,39 @@ public class ParallelMergeSortMergeSortedListsUnitTest extends AbstractUnitTest<
 
         List<Integer> result = (List<Integer>) resultObj;
 
-        assertEquals("Does the list contain the correct number of results?", 4, result.size());
+        assertEquals("Does the list contain the correct number of results?", 5, result.size());
+        verifyOrder(new int[] {1, 2, 3, 5, 8}, result);
+    }
+
+    @Test
+    public void testSmallerRightList() throws PrivateTestMethodException {
+        List<Integer> first = new ArrayList<>();
+        first.add(2);
+        first.add(5);
+        first.add(7);
+
+        List<Integer> second = new ArrayList<>();
+        second.add(1);
+        second.add(3);
+
+        Object resultObj = executePrivateMethod("mergeSortedLists",
+                new Class[] {List.class, List.class, Comparator.class},
+                new Object[] {first, second, (Comparator<Integer>) (a, b) -> a > b});
+
+        assertTrue("Is the result of the correct type?", resultObj instanceof List);
+
+        List<Integer> result = (List<Integer>) resultObj;
+
+        assertEquals("Does the list contain the correct number of results?", 5, result.size());
+        verifyOrder(new int[] {1, 2, 3, 5, 7}, result);
+    }
+
+    private void verifyOrder(int[] expected, List<Integer> result) {
+        for (int i=0; i < expected.length; i++) {
+            assertEquals("Is the value at position " + i + " expected?",
+                    expected[i],
+                    result.get(i).intValue());
+        }
     }
 
     // TODO - Add in testing for single value lists, as well as uneven sized lists...
