@@ -99,11 +99,9 @@ public class ParallelMergeSort<T> implements Sort<T> {
             } else {
                 result.add(firstElement);
                 firstListCycle = true;
-                if (firstListIterator.hasNext()) {
-                    firstListIterator.remove();
-                } else {
-                    break;
-                }
+
+                if (!firstListIterator.hasNext()) break;
+                firstListIterator.remove();
             }
         }
 
