@@ -105,5 +105,65 @@ public class ParallelMergeSortMergeSortedListsUnitTest extends AbstractUnitTest<
         }
     }
 
-    // TODO - Add in testing for single value lists, as well as uneven sized lists...
+    @Test
+    public void testSingleValueLeftList() throws PrivateTestMethodException {
+        List<Integer> first = new ArrayList<>();
+        first.add(2);
+
+        List<Integer> second = new ArrayList<>();
+        second.add(1);
+        second.add(3);
+
+        Object resultObj = executePrivateMethod("mergeSortedLists",
+                new Class[] {List.class, List.class, Comparator.class},
+                new Object[] {first, second, (Comparator<Integer>) (a, b) -> a > b});
+
+        assertTrue("Is the result of the correct type?", resultObj instanceof List);
+
+        List<Integer> result = (List<Integer>) resultObj;
+
+        assertEquals("Does the list contain the correct number of results?", 3, result.size());
+        verifyOrder(new int[] {1, 2, 3}, result);
+    }
+
+    @Test
+    public void testSingleValueRightList() throws PrivateTestMethodException {
+        List<Integer> first = new ArrayList<>();
+        first.add(2);
+        first.add(4);
+
+        List<Integer> second = new ArrayList<>();
+        second.add(3);
+
+        Object resultObj = executePrivateMethod("mergeSortedLists",
+                new Class[] {List.class, List.class, Comparator.class},
+                new Object[] {first, second, (Comparator<Integer>) (a, b) -> a > b});
+
+        assertTrue("Is the result of the correct type?", resultObj instanceof List);
+
+        List<Integer> result = (List<Integer>) resultObj;
+
+        assertEquals("Does the list contain the correct number of results?", 3, result.size());
+        verifyOrder(new int[] {2, 3, 4}, result);
+    }
+
+    @Test
+    public void testSingleValueLists() throws PrivateTestMethodException {
+        List<Integer> first = new ArrayList<>();
+        first.add(2);
+
+        List<Integer> second = new ArrayList<>();
+        second.add(1);
+
+        Object resultObj = executePrivateMethod("mergeSortedLists",
+                new Class[] {List.class, List.class, Comparator.class},
+                new Object[] {first, second, (Comparator<Integer>) (a, b) -> a > b});
+
+        assertTrue("Is the result of the correct type?", resultObj instanceof List);
+
+        List<Integer> result = (List<Integer>) resultObj;
+
+        assertEquals("Does the list contain the correct number of results?", 2, result.size());
+        verifyOrder(new int[] {1, 2}, result);
+    }
 }
