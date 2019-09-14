@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.IntFunction;
 
 /**
  * An implementation of <tt>Sort</tt> that uses a merge sort technique to sort the required input. This
