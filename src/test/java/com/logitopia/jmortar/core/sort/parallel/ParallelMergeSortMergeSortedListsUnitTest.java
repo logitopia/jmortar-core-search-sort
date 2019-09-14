@@ -14,6 +14,9 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Unit test the private <tt>mergeSortedLists</tt> method on the <tt>ParallelMergeSort</tt> class.
+ *
+ * Typically it wouldn't be practical to unit test private methods, but in this case the <tt>mergeSortedLists</tt>
+ * method is quite complex and so it is good to be able to validate on change that it is still working as expected.
  */
 public class ParallelMergeSortMergeSortedListsUnitTest extends AbstractUnitTest<ParallelMergeSort<Integer>> {
 
