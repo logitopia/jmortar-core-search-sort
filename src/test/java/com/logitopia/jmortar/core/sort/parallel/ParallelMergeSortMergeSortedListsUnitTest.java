@@ -99,7 +99,7 @@ public class ParallelMergeSortMergeSortedListsUnitTest extends AbstractUnitTest<
 
     private void verifyOrder(int[] expected, List<Integer> result) {
         for (int i=0; i < expected.length; i++) {
-            assertEquals("Is the value at position " + i + " expected?",
+            assertEquals("Is the value at position " + (i + 1) + " expected?",
                     expected[i],
                     result.get(i).intValue());
         }
