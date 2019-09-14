@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.IntFunction;
 
 /**
  * An implementation of <tt>Sort</tt> that uses a merge sort technique to sort the required input. This
@@ -22,15 +23,24 @@ public class ParallelMergeSort<T> implements Sort<T> {
      */
     @Override
     public void sort(T[] itemsToBeSorted, Comparator<T> comparator) {
-        /* TODO - NEW IDEA - Take each element of the original array as a "Single Element List". Then simply build
-        the list up from there WITHOUT needing to expensively split it first.
-         */
-
         // TODO - Break the array into two element lists and feed to the reducer...
         List<T> input = new ArrayList<>(Arrays.asList(itemsToBeSorted));
-        List<List<T>> partitioned = Lists.partition(input, 2);
+        List<List<T>> partitioned = Lists.partition(input, 1);
+
+        /*
+            This works but it needs to happen recursively now until we have a list with just one list in it...
+         */
         List<List<T>> result = reducer(partitioned, comparator);
-        System.out.println(2);
+
+        List<T> resultItem = result.get(0);
+
+        loadSortedListIntoInputArray(itemsToBeSorted, resultItem);
+    }
+
+    private void loadSortedListIntoInputArray(T[] input, List<T> sorted) {
+        for (int i=0; i<sorted.size();i++) {
+            input[i] = sorted.get(i);
+        }
     }
 
     /**
@@ -46,6 +56,7 @@ public class ParallelMergeSort<T> implements Sort<T> {
         Iterator<List<T>> input = lists.iterator();
 
         while (input.hasNext()) {
+            // TODO -- THIS IS WHAT WE PARALLELIZE...
             List<T> first = input.next();
 
             // Odd Element - Add to result and skip
@@ -55,7 +66,13 @@ public class ParallelMergeSort<T> implements Sort<T> {
             }
 
             List<T> second = input.next();
-            result.add(mergeSortedLists(first, second, comparator));
+            result.add(mergeSortedLists(new ArrayList<>(first), new ArrayList<>(second), comparator));
+            // TODO -- END OF PARALLELIZATION --
+        }
+
+        // Recurse until we get to a list of size 1 (i.e. the final sorted list)
+        if (lists.size() > 1) {
+            return reducer(result, comparator);
         }
 
         return result;
