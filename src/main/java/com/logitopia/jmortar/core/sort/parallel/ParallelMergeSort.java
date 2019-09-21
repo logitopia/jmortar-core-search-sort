@@ -22,17 +22,15 @@ public class ParallelMergeSort<T> implements Sort<T> {
      */
     @Override
     public void sort(T[] itemsToBeSorted, Comparator<T> comparator) {
-        // TODO - Break the array into two element lists and feed to the reducer...
+        // [1] Break the incoming array down into their smallest components (i.e. lists of size 1)
         List<T> input = new ArrayList<>(Arrays.asList(itemsToBeSorted));
         List<List<T>> partitioned = Lists.partition(input, 1);
 
-        /*
-            This works but it needs to happen recursively now until we have a list with just one list in it...
-         */
+        // [2] Build them back up by sorting and merging them
         List<List<T>> result = reducer(partitioned, comparator);
 
+        // [3] Load the sorted result back into a resulting array
         List<T> resultItem = result.get(0);
-
         loadSortedListIntoInputArray(itemsToBeSorted, resultItem);
     }
 
