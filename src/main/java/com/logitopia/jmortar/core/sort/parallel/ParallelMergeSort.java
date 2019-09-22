@@ -4,10 +4,11 @@ import com.google.common.collect.Lists;
 import com.logitopia.jmortar.core.comparator.Comparator;
 import com.logitopia.jmortar.core.sort.Sort;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * An implementation of <tt>Sort</tt> that uses a merge sort technique to sort the required input. This
@@ -16,6 +17,15 @@ import java.util.List;
  * @param <T> The type of item being sorted.
  */
 public class ParallelMergeSort<T> implements Sort<T> {
+
+    private ExecutorService threadPool;
+
+    /**
+     * Default Constructor. This creates a <tt>ParallelMergeSort</tt> that has a default number of threads.
+     */
+    public ParallelMergeSort() {
+        threadPool = Executors.newFixedThreadPool(5);
+    }
 
     /**
      * {@inheritDoc}
@@ -35,7 +45,7 @@ public class ParallelMergeSort<T> implements Sort<T> {
     }
 
     private void loadSortedListIntoInputArray(T[] input, List<T> sorted) {
-        for (int i=0; i<sorted.size();i++) {
+        for (int i = 0; i < sorted.size(); i++) {
             input[i] = sorted.get(i);
         }
     }
@@ -49,11 +59,11 @@ public class ParallelMergeSort<T> implements Sort<T> {
      * @return A reduced list of lists where small lists have been merged into a smaller set of larger ones.
      */
     private List<List<T>> reducer(List<List<T>> lists, Comparator<T> comparator) {
-        List<List<T>> result = new ArrayList<>();
+        List<List<T>> result = Collections.synchronizedList(new ArrayList<>());
         Iterator<List<T>> input = lists.iterator();
 
+        CountDownLatch latch = initializeLatch(lists.size());
         while (input.hasNext()) {
-            // TODO -- THIS IS WHAT WE PARALLELIZE...
             List<T> first = input.next();
 
             // Odd Element - Add to result and skip
@@ -63,8 +73,20 @@ public class ParallelMergeSort<T> implements Sort<T> {
             }
 
             List<T> second = input.next();
-            result.add(mergeSortedLists(new ArrayList<>(first), new ArrayList<>(second), comparator));
-            // TODO -- END OF PARALLELIZATION --
+
+            // Submit the merge to be run in it's own thread
+            threadPool.submit(() -> {
+                result.add(mergeSortedLists(new ArrayList<>(first), new ArrayList<>(second), comparator));
+                latch.countDown();
+            });
+        }
+
+        // Wait for completion of all of the merge operations
+        try {
+            latch.await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            // Unknown state, unable to determine that the sort completed successfully..
+            throw new IllegalStateException("Unable to determine whether the sort completed successfully.");
         }
 
         // Recurse until we get to a list of size 1 (i.e. the final sorted list)
@@ -73,6 +95,19 @@ public class ParallelMergeSort<T> implements Sort<T> {
         }
 
         return result;
+    }
+
+    /**
+     * Initialize a latch that allows us to track when all of the sorted lists have been merged.
+     *
+     * @param inputListSize The size of the list that we want to provide a latch for.
+     */
+    private CountDownLatch initializeLatch(int inputListSize) {
+        if (inputListSize % 2 == 0) {
+            return new CountDownLatch(inputListSize / 2);
+        } else {
+            return new CountDownLatch((inputListSize - 1) / 2);
+        }
     }
 
     /**
