@@ -83,7 +83,7 @@ public class ParallelMergeSort<T> implements Sort<T> {
 
         // Wait for completion of all of the merge operations
         try {
-            latch.await(30, TimeUnit.SECONDS);
+            latch.await(3, TimeUnit.MINUTES);
         } catch (InterruptedException e) {
             // Unknown state, unable to determine that the sort completed successfully..
             throw new IllegalStateException("Unable to determine whether the sort completed successfully.");
