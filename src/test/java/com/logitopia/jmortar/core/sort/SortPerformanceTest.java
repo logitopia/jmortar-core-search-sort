@@ -5,7 +5,7 @@ import org.junit.Test;
 /**
  * Comparative performance testing for all of the sorting algorithms.
  */
-public class SortPerformanceUnitTest {
+public class SortPerformanceTest {
 
     private static final Integer[] TEST_PRIMATIVE_DATA = new Integer[]{359, 704, 855, 88, 264, 135, 34, 902, 840, 126,
             193, 907, 255, 500, 536, 100, 388, 70, 487, 775, 802, 556, 245, 894, 228, 226, 804, 810, 829, 61, 497, 788,
