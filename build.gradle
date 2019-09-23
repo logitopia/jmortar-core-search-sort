@@ -72,6 +72,14 @@ dependencies {
     testCompile 'com.logitopia:jmortar-core-test:1.1.0'
 }
 
+test {
+    // Fail the 'test' task on the first test failure
+    failFast = true
+
+    // ..:: Exclusions - Perform performance testing separately
+    exclude '**/*PerformanceTest.class'
+}
+
 jacocoTestReport {
     reports {
         xml.enabled false
