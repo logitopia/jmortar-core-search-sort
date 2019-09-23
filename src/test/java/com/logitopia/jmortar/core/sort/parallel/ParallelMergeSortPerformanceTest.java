@@ -22,7 +22,7 @@ public class ParallelMergeSortPerformanceTest {
     private ParallelMergeSort<Integer> subject = new ParallelMergeSort<>();
 
     @Test
-    public void testMediumYieldTestData() {
+    public void singleRunMediumYieldTestData() {
         TestData<Integer> testData = new IntegerTestData(MEDIUM_YIELD_ELEMENT_SIZE);
         System.out.println("Generating Test Data..");
         List<Integer> testDataElements = testData.get();
