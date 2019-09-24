@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.logitopia.jmortar.core.sort.parallel.ParallelMergeSortMergeSortedListsUnitTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2019-09-24T20:50:03" hostname="DESKTOP-2PUINBP" time="0.008">
+  <properties/>
+  <testcase name="testSingleValueRightList" classname="com.logitopia.jmortar.core.sort.parallel.ParallelMergeSortMergeSortedListsUnitTest" time="0.003"/>
+  <testcase name="testSmallerLeftList" classname="com.logitopia.jmortar.core.sort.parallel.ParallelMergeSortMergeSortedListsUnitTest" time="0.0"/>
+  <testcase name="testSingleValueLists" classname="com.logitopia.jmortar.core.sort.parallel.ParallelMergeSortMergeSortedListsUnitTest" time="0.0"/>
+  <testcase name="testBasicSuccess" classname="com.logitopia.jmortar.core.sort.parallel.ParallelMergeSortMergeSortedListsUnitTest" time="0.001"/>
+  <testcase name="testSmallerRightList" classname="com.logitopia.jmortar.core.sort.parallel.ParallelMergeSortMergeSortedListsUnitTest" time="0.001"/>
+  <testcase name="testSingleValueLeftList" classname="com.logitopia.jmortar.core.sort.parallel.ParallelMergeSortMergeSortedListsUnitTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

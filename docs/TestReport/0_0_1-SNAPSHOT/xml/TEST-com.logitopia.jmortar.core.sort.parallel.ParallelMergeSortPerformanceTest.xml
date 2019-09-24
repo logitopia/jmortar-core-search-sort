@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.logitopia.jmortar.core.sort.parallel.ParallelMergeSortPerformanceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-09-24T20:50:03" hostname="DESKTOP-2PUINBP" time="66.428">
+  <properties/>
+  <testcase name="singleRunMediumYieldTestData" classname="com.logitopia.jmortar.core.sort.parallel.ParallelMergeSortPerformanceTest" time="66.428"/>
+  <system-out><![CDATA[Generating Test Data..
+Loading Test Data into Array..
+Initiating sort..
+Sort completed in 66 seconds!
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
