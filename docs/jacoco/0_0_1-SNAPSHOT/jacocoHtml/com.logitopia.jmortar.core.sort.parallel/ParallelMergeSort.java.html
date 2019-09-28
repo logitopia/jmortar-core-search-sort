@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ParallelMergeSort.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jmortar-core-search-sort</a> &gt; <a href="index.source.html" class="el_package">com.logitopia.jmortar.core.sort.parallel</a> &gt; <span class="el_source">ParallelMergeSort.java</span></div><h1>ParallelMergeSort.java</h1><pre class="source lang-java linenums">package com.logitopia.jmortar.core.sort.parallel;
+
+import com.google.common.collect.Lists;
+import com.logitopia.jmortar.core.comparator.Comparator;
+import com.logitopia.jmortar.core.sort.Sort;
+
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * An implementation of &lt;tt&gt;Sort&lt;/tt&gt; that uses a merge sort technique to sort the required input. This
+ * implementation implements the sort to utilise parallelisation techniques.
+ *
+ * @param &lt;T&gt; The type of item being sorted.
+ */
+public class ParallelMergeSort&lt;T&gt; implements Sort&lt;T&gt; {
+
+    private ExecutorService threadPool;
+
+    /**
+     * Default Constructor. This creates a &lt;tt&gt;ParallelMergeSort&lt;/tt&gt; that has a default number of threads.
+     */
+<span class="fc" id="L26">    public ParallelMergeSort() {</span>
+<span class="fc" id="L27">        threadPool = Executors.newFixedThreadPool(5);</span>
+<span class="fc" id="L28">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void sort(T[] itemsToBeSorted, Comparator&lt;T&gt; comparator) {
+        // [1] Break the incoming array down into their smallest components (i.e. lists of size 1)
+<span class="fc" id="L36">        List&lt;T&gt; input = new ArrayList&lt;&gt;(Arrays.asList(itemsToBeSorted));</span>
+<span class="fc" id="L37">        List&lt;List&lt;T&gt;&gt; partitioned = Lists.partition(input, 1);</span>
+
+        // [2] Build them back up by sorting and merging them
+<span class="fc" id="L40">        List&lt;List&lt;T&gt;&gt; result = reducer(partitioned, comparator);</span>
+
+        // [3] Load the sorted result back into a resulting array
+<span class="fc" id="L43">        List&lt;T&gt; resultItem = result.get(0);</span>
+<span class="fc" id="L44">        loadSortedListIntoInputArray(itemsToBeSorted, resultItem);</span>
+<span class="fc" id="L45">    }</span>
+
+    private void loadSortedListIntoInputArray(T[] input, List&lt;T&gt; sorted) {
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        for (int i = 0; i &lt; sorted.size(); i++) {</span>
+<span class="fc" id="L49">            input[i] = sorted.get(i);</span>
+        }
+<span class="fc" id="L51">    }</span>
+
+    /**
+     * Reduces a given list of lists by merging them off. If there is an odd remainder, it will be bolted on to the
+     * end of the result and reduced in the next step.
+     *
+     * @param lists      The list of lists that we wish to reduce by merging.
+     * @param comparator A strategy that we use to compare two elements.
+     * @return A reduced list of lists where small lists have been merged into a smaller set of larger ones.
+     */
+    private List&lt;List&lt;T&gt;&gt; reducer(List&lt;List&lt;T&gt;&gt; lists, Comparator&lt;T&gt; comparator) {
+<span class="fc" id="L62">        List&lt;List&lt;T&gt;&gt; result = Collections.synchronizedList(new ArrayList&lt;&gt;());</span>
+<span class="fc" id="L63">        Iterator&lt;List&lt;T&gt;&gt; input = lists.iterator();</span>
+
+<span class="fc" id="L65">        CountDownLatch latch = initializeLatch(lists.size());</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        while (input.hasNext()) {</span>
+<span class="fc" id="L67">            List&lt;T&gt; first = input.next();</span>
+
+            // Odd Element - Add to result and skip
+<span class="fc bfc" id="L70" title="All 2 branches covered.">            if (!input.hasNext()) {</span>
+<span class="fc" id="L71">                result.add(first);</span>
+<span class="fc" id="L72">                continue;</span>
+            }
+
+<span class="fc" id="L75">            List&lt;T&gt; second = input.next();</span>
+
+            // Submit the merge to be run in it's own thread
+<span class="fc" id="L78">            threadPool.submit(() -&gt; {</span>
+<span class="fc" id="L79">                result.add(mergeSortedLists(new ArrayList&lt;&gt;(first), new ArrayList&lt;&gt;(second), comparator));</span>
+<span class="fc" id="L80">                latch.countDown();</span>
+<span class="fc" id="L81">            });</span>
+<span class="fc" id="L82">        }</span>
+
+        // Wait for completion of all of the merge operations
+        try {
+<span class="fc" id="L86">            latch.await(3, TimeUnit.MINUTES);</span>
+<span class="nc" id="L87">        } catch (InterruptedException e) {</span>
+            // Unknown state, unable to determine that the sort completed successfully..
+<span class="nc" id="L89">            throw new IllegalStateException(&quot;Unable to determine whether the sort completed successfully.&quot;);</span>
+<span class="fc" id="L90">        }</span>
+
+        // Recurse until we get to a list of size 1 (i.e. the final sorted list)
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (lists.size() &gt; 1) {</span>
+<span class="fc" id="L94">            return reducer(result, comparator);</span>
+        }
+
+<span class="fc" id="L97">        return result;</span>
+    }
+
+    /**
+     * Initialize a latch that allows us to track when all of the sorted lists have been merged.
+     *
+     * @param inputListSize The size of the list that we want to provide a latch for.
+     */
+    private CountDownLatch initializeLatch(int inputListSize) {
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        if (inputListSize % 2 == 0) {</span>
+<span class="fc" id="L107">            return new CountDownLatch(inputListSize / 2);</span>
+        } else {
+<span class="fc" id="L109">            return new CountDownLatch((inputListSize - 1) / 2);</span>
+        }
+    }
+
+    /**
+     * Merge two &quot;sorted&quot; lists by continuously comparing the first element of each list until there are no elements
+     * left. This merges the elements of the two lists, whilst sorting them at the same time.
+     *
+     * @param first  The first of two lists that we wish to merge.
+     * @param second The second of two lists that we wish to merge.
+     * @return The &quot;merged&quot; and sorted lists.
+     */
+    private List&lt;T&gt; mergeSortedLists(List&lt;T&gt; first, List&lt;T&gt; second, Comparator&lt;T&gt; comparator) {
+<span class="fc" id="L122">        List&lt;T&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L123">        int expectedSize = first.size() + second.size();</span>
+
+<span class="fc" id="L125">        Iterator&lt;T&gt; firstListIterator = first.iterator();</span>
+<span class="fc" id="L126">        T firstElement = null;</span>
+        T secondElement;
+<span class="fc" id="L128">        boolean firstListCycle = true;</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">        while (result.size() != expectedSize) {</span>
+<span class="fc bfc" id="L130" title="All 4 branches covered.">            if (firstListIterator.hasNext() &amp;&amp; firstListCycle) {</span>
+<span class="fc" id="L131">                firstElement = firstListIterator.next();</span>
+<span class="fc" id="L132">                firstListCycle = false;</span>
+            }
+
+            /* If the first &quot;sorted&quot; list still has elements, but the second shorter list has run out, then we just
+               continue adding the remaining elements from the first list to the result.*/
+<span class="fc bfc" id="L137" title="All 2 branches covered.">            if (second.size() == 0) {</span>
+<span class="fc" id="L138">                result.add(firstElement);</span>
+<span class="fc" id="L139">                firstListCycle = true;</span>
+<span class="fc" id="L140">                continue;</span>
+            } else {
+<span class="fc" id="L142">                secondElement = second.get(0);</span>
+            }
+
+<span class="fc bfc" id="L145" title="All 2 branches covered.">            if (comparator.compare(firstElement, secondElement)) {</span>
+<span class="fc" id="L146">                result.add(secondElement);</span>
+<span class="fc" id="L147">                second.remove(0);</span>
+            } else {
+<span class="fc" id="L149">                result.add(firstElement);</span>
+<span class="fc" id="L150">                firstListCycle = true;</span>
+
+<span class="fc bfc" id="L152" title="All 2 branches covered.">                if (!firstListIterator.hasNext()) break;</span>
+<span class="fc" id="L153">                firstListIterator.remove();</span>
+            }
+        }
+
+        /* If the second &quot;sorted&quot; list has elements left, add them to the result (they will be higher and in order than
+           the final result element. */
+<span class="fc bfc" id="L159" title="All 2 branches covered.">        if (second.size() &gt; 0) {</span>
+<span class="fc" id="L160">            result.addAll(second);</span>
+        }
+
+<span class="fc" id="L163">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

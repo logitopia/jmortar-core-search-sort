@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BubbleSort.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jmortar-core-search-sort</a> &gt; <a href="index.source.html" class="el_package">com.logitopia.jmortar.core.sort</a> &gt; <span class="el_source">BubbleSort.java</span></div><h1>BubbleSort.java</h1><pre class="source lang-java linenums">package com.logitopia.jmortar.core.sort;
+
+import com.logitopia.jmortar.core.comparator.Comparator;
+
+/**
+ * An implementation of &lt;tt&gt;Sort&lt;/tt&gt; that uses a bubble sorting technique to sort the required input.
+ *
+ * @param &lt;T&gt; The type of item being sorted
+ */
+<span class="fc" id="L10">public class BubbleSort&lt;T&gt; implements Sort&lt;T&gt; {</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public synchronized void sort(T[] input, Comparator&lt;T&gt; comparator) {
+<span class="fc" id="L17">        int length = input.length;</span>
+        int i, j;
+        T temp;
+        boolean swapped;
+<span class="pc bpc" id="L21" title="1 of 2 branches missed.">        for (i = 0; i &lt; length - 1; i++) {</span>
+<span class="fc" id="L22">            swapped = false;</span>
+
+<span class="fc bfc" id="L24" title="All 2 branches covered.">            for (j = 0; j &lt; length - i - 1; j++) {</span>
+<span class="fc" id="L25">                T first = input[j];</span>
+<span class="fc" id="L26">                T second = input[j + 1];</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">                if (comparator.compare(first, second)) {</span>
+                    // First should be lower than the second... SWAP
+<span class="fc" id="L29">                    temp = first;</span>
+<span class="fc" id="L30">                    input[j] = second;</span>
+<span class="fc" id="L31">                    input[j + 1] = temp;</span>
+<span class="fc" id="L32">                    swapped = true;</span>
+                }
+            }
+
+<span class="fc bfc" id="L36" title="All 2 branches covered.">            if (!swapped) break;</span>
+        }
+<span class="fc" id="L38">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
