@@ -32,6 +32,7 @@ bintray {
 
 repositories {
     maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url  "https://dl.bintray.com/logitopia/jmortar-release" }
 
     mavenLocal()
     jcenter()
