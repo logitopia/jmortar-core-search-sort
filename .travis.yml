@@ -8,4 +8,8 @@ before_install:
   - chmod +x gradlew
 
 script:
+  # Run unit testing
+  - ./gradlew test
+
+  # Run performance testing
   - ./gradlew performanceTest --stacktrace --info
