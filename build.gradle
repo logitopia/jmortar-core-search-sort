@@ -72,12 +72,22 @@ dependencies {
     testCompile 'com.logitopia:jmortar-core-test:1.1.0'
 }
 
+// Run the unit tests (will run by default every time a build happens
 test {
-    // Fail the 'test' task on the first test failure
     failFast = true
+    maxParallelForks=3
 
     // ..:: Exclusions - Perform performance testing separately
     exclude '**/*PerformanceTest.class'
+}
+
+// Runs the performance tests
+task ('performanceTest', type: Test) {
+    failFast = true
+    maxParallelForks=3
+
+    scanForTestClasses=false
+    include '**/*PerformanceTest.class'
 }
 
 jacocoTestReport {
