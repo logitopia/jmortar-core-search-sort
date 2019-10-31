@@ -57,7 +57,7 @@ public class SortPerformanceTest {
             624, 720, 777, 767, 26, 694, 925, 66, 614, 523, 473, 225, 805, 522, 786, 227, 758, 330, 837, 701, 204
             , 705, 171, 200, 502, 941, 541, 56, 965, 604, 531, 690, 930, 23,};
 
-    @Test(timeout = 100)
+    @Test(timeout = 200)
     public void testBubbleSortPerformance() {
         long start = System.currentTimeMillis();
         Sort<Integer> sort = new BubbleSort<>();
@@ -66,7 +66,7 @@ public class SortPerformanceTest {
         System.out.println("Sort took " + (end - start) + " MilliSeconds");
     }
 
-    @Test(timeout = 100)
+    @Test(timeout = 200)
     public void testSelectionSortPerformance() {
         long start = System.currentTimeMillis();
         Sort<Integer> sort = new SelectionSort<>();
