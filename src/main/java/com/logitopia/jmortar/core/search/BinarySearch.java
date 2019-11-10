@@ -17,16 +17,23 @@ public class BinarySearch<T> implements Search<T> {
 
     private Comparator<T> equalityComparator;
 
+    private Comparator<T> lessThanComparator;
+
     /**
      * Default Constructor. Creates an instance of the {@link Search} with the required equality comparator. The
      * comparator will verify whether an element in a list is equal to the object being searched for. Using a
      * separate implementation means that we don't need to rely on the objects {@link Object#equals(Object)}
      * implementation.
      *
-     * @param equalityComparator The comparator that this search instance will use.
+     * @param equalityComparator A comparator that will be used to determine if the search value is equal to a
+     *                           specified element in the list.
+     * @param lessThanComparator A comparator that will be used to determine if the search value is less than a
+     *                           specified element in the list.
      */
-    public BinarySearch(Comparator<T> equalityComparator) {
+    public BinarySearch(Comparator<T> equalityComparator,
+                        Comparator<T> lessThanComparator) {
         this.equalityComparator = equalityComparator;
+        this.lessThanComparator = lessThanComparator;
     }
 
     /**
@@ -34,7 +41,23 @@ public class BinarySearch<T> implements Search<T> {
      */
     @Override
     public int findMatch(List<T> elements, T valueToFind) {
-        return 0;
+        int startIndex = 0;
+        int endIndex = elements.size() - 1;
+        int midPointIndex = startIndex + ((endIndex - startIndex) / 2);
+
+        // Check if the midpoint matches the value to find
+        if (equalityComparator.compare(elements.get(midPointIndex), valueToFind)) {
+            // Match found .. return as the first match
+            return midPointIndex;
+        }
+
+        if (lessThanComparator.compare(elements.get(midPointIndex), valueToFind)) {
+            // Search the left
+            return findMatch(elements.subList(startIndex, midPointIndex-1), valueToFind);
+        } else {
+            // Search the right
+            return findMatch(elements.subList(midPointIndex+1, endIndex), valueToFind);
+        }
     }
 
     /**
