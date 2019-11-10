@@ -9,5 +9,22 @@ import java.util.List;
  */
 public interface Search<T> {
 
-    int findMatch(List<T> elements, String matcher);
+    /**
+     * Find the given element from the list of elements.
+     *
+     * @param elements    A list of the elements that we wish to search.
+     * @param valueToFind A specific value that we want to find in the given list.
+     * @return The position in the list of elements where the value is found. If there are multiple matches in the
+     * list of elements, the first match is returned.
+     */
+    int findMatch(List<T> elements, T valueToFind);
+
+    /**
+     * Find all of the elements that match a specific value from the given list of elements.
+     *
+     * @param elements    A list of the elements that we wish to search through.
+     * @param valueToFind A specific value that we want to find in the given list.
+     * @return A {@link List} of the positions matching the given element.
+     */
+    List<Integer> findMatches(List<T> elements, T valueToFind);
 }
