@@ -48,15 +48,19 @@ public class BinarySearch<T> implements Search<T> {
         // Check if the midpoint matches the value to find
         if (equalityComparator.compare(elements.get(midPointIndex), valueToFind)) {
             // Match found .. return as the first match
+            // TODO :: BUG FOUND :: As we recurse and return a sublist, we are finding the element, but we arent'
+            //  returning the index from the original elements list where it resides, this is why we need a search
+            //  method that takes the original list and the positions :-( Either that or change from recursion to
+            //  iteration... (I think iteration is more efficient inside the JVM - should check)
             return midPointIndex;
         }
 
-        if (lessThanComparator.compare(elements.get(midPointIndex), valueToFind)) {
+        if (lessThanComparator.compare(valueToFind, elements.get(midPointIndex))) {
             // Search the left
             return findMatch(elements.subList(startIndex, midPointIndex-1), valueToFind);
         } else {
             // Search the right
-            return findMatch(elements.subList(midPointIndex+1, endIndex), valueToFind);
+            return findMatch(elements.subList(midPointIndex+1, endIndex+1), valueToFind);
         }
     }
 
