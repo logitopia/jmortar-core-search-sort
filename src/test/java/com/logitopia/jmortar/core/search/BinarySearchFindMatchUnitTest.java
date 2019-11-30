@@ -35,6 +35,6 @@ public class BinarySearchFindMatchUnitTest {
     @Test
     public void testElementNotFound() {
         int result = subject.findMatch(TEST_ELEMENTS, 17);
-        assertEquals("Is the element at the expected index?", 9, result);
+        assertEquals("Is the element at the expected index?", -1, result);
     }
 }

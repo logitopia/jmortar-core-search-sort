@@ -2,6 +2,7 @@ package com.logitopia.jmortar.core.search;
 
 import com.logitopia.jmortar.core.comparator.Comparator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,6 +64,9 @@ public class BinarySearch<T> implements Search<T> {
         if (equalityComparator.compare(middleElement, valueToFind)) {
             // We found the value, return it's initial index
             return midPointIndex;
+        } else if (startIndex == endIndex) {
+            // We've exhausted all options, signal that no entry could be found
+            return -1;
         }
 
         if (lessThanComparator.compare(valueToFind, middleElement)) {
@@ -79,6 +83,11 @@ public class BinarySearch<T> implements Search<T> {
      */
     @Override
     public List<Integer> findMatches(List<T> elements, T valueToFind) {
-        return null;
+        List<Integer> result = new ArrayList<>();
+        int index = findMatch(elements, valueToFind);
+
+
+
+        return result;
     }
 }
