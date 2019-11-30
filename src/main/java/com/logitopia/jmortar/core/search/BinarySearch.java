@@ -43,24 +43,34 @@ public class BinarySearch<T> implements Search<T> {
     public int findMatch(List<T> elements, T valueToFind) {
         int startIndex = 0;
         int endIndex = elements.size() - 1;
+        return search(startIndex, endIndex, elements, valueToFind);
+    }
+
+    /**
+     * Binary search, search the given range on the full list.
+     *
+     * @param startIndex    The start of the range to search.
+     * @param endIndex      The end of the full range to search.
+     * @param elements The elements that we are searching in.
+     *
+     * @return The index of the element we are trying to find.
+     */
+    private int search(int startIndex, int endIndex, List<T> elements, T valueToFind) {
         int midPointIndex = startIndex + ((endIndex - startIndex) / 2);
 
         // Check if the midpoint matches the value to find
-        if (equalityComparator.compare(elements.get(midPointIndex), valueToFind)) {
-            // Match found .. return as the first match
-            // TODO :: BUG FOUND :: As we recurse and return a sublist, we are finding the element, but we arent'
-            //  returning the index from the original elements list where it resides, this is why we need a search
-            //  method that takes the original list and the positions :-( Either that or change from recursion to
-            //  iteration... (I think iteration is more efficient inside the JVM - should check)
+        T middleElement = elements.get(midPointIndex);
+        if (equalityComparator.compare(middleElement, valueToFind)) {
+            // We found the value, return it's initial index
             return midPointIndex;
         }
 
-        if (lessThanComparator.compare(valueToFind, elements.get(midPointIndex))) {
+        if (lessThanComparator.compare(valueToFind, middleElement)) {
             // Search the left
-            return findMatch(elements.subList(startIndex, midPointIndex-1), valueToFind);
+            return search(startIndex, midPointIndex-1, elements, valueToFind);
         } else {
             // Search the right
-            return findMatch(elements.subList(midPointIndex+1, endIndex+1), valueToFind);
+            return search(midPointIndex + 1, endIndex + 1, elements, valueToFind);
         }
     }
 
