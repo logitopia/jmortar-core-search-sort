@@ -115,4 +115,8 @@ public class BinarySearch<T> implements Search<T> {
 
         return result;
     }
+
+    private int findLeftmostMatch(List<T> elements, T valueToFind) {
+        return 0;
+    }
 }
