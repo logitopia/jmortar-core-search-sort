@@ -36,6 +36,7 @@ public class BinarySearchFindLeftmostMatchUnitTest extends AbstractUnitTest<Bina
                 new Class[]{List.class, Object.class},
                 new Object[]{TEST_ELEMENTS, 12});
 
-        assertEquals("Message", 7, result);
+        assertEquals("Successfully identified the leftmost element where duplicates exist",
+                7, result);
     }
 }

@@ -124,7 +124,7 @@ public class BinarySearch<T> implements Search<T> {
             int midPointIndex = startIndex + ((endIndex - startIndex) / 2);
 
             T middleElement = elements.get(midPointIndex);
-            if (lessThanComparator.compare(valueToFind, middleElement)) {
+            if (lessThanComparator.compare(middleElement, valueToFind)) {
                 startIndex = midPointIndex + 1;
             } else {
                 endIndex = midPointIndex;
