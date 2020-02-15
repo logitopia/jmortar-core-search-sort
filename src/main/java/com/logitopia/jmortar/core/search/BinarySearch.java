@@ -85,6 +85,15 @@ public class BinarySearch<T> implements Search<T> {
     @Override
     public List<Integer> findMatches(List<T> elements, T valueToFind) {
         List<Integer> result = new ArrayList<>();
+
+        if (elements.size() == 0) {
+            // Route 1 - We don't do anything if we're passed an empty list (save CPU).
+            return result;
+        }
+
+        /* TODO - This is in-efficient! Just check the length of the list upfront, let the left and right checks
+        *   determine if the element is present and let the consumer decide whether they want to run this check
+        * up-front*/
         int index = findMatch(elements, valueToFind);
 
         if (index == -1) {
@@ -130,6 +139,8 @@ public class BinarySearch<T> implements Search<T> {
                 endIndex = midPointIndex;
             }
         }
+
+        System.out.println("Start: " + startIndex + " | End: " + endIndex);
 
         return startIndex;
     }
