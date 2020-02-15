@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class BinarySearchFindLeftmostMatchUnitTest extends AbstractUnitTest<BinarySearch<Integer>> {
 
@@ -36,6 +36,6 @@ public class BinarySearchFindLeftmostMatchUnitTest extends AbstractUnitTest<Bina
                 new Class[]{List.class, Object.class},
                 new Object[]{TEST_ELEMENTS, 12});
 
-        assertTrue(true);
+        assertEquals("Message", 7, result);
     }
 }
