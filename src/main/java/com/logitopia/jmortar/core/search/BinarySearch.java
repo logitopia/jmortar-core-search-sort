@@ -117,6 +117,20 @@ public class BinarySearch<T> implements Search<T> {
     }
 
     private int findLeftmostMatch(List<T> elements, T valueToFind) {
-        return 0;
+        int startIndex = 0;
+        int endIndex = elements.size();
+
+        while (startIndex < endIndex) {
+            int midPointIndex = startIndex + ((endIndex - startIndex) / 2);
+
+            T middleElement = elements.get(midPointIndex);
+            if (lessThanComparator.compare(valueToFind, middleElement)) {
+                startIndex = midPointIndex + 1;
+            } else {
+                endIndex = midPointIndex;
+            }
+        }
+
+        return startIndex;
     }
 }
