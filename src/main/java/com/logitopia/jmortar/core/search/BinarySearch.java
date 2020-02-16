@@ -144,6 +144,20 @@ public class BinarySearch<T> implements Search<T> {
     }
 
     private int findRightmostMatch(List<T> elements, T valueToFind) {
-        return 0;
+        int startIndex = 0;
+        int endIndex = elements.size();
+
+        while (startIndex < endIndex) {
+            int midPointIndex = startIndex + ((endIndex - startIndex) / 2);
+
+            T middleElement = elements.get(midPointIndex);
+            if (lessThanComparator.compare(valueToFind, middleElement)) {
+                endIndex = midPointIndex;
+            } else {
+                startIndex = midPointIndex + 1;
+            }
+        }
+
+        return endIndex -1;
     }
 }
