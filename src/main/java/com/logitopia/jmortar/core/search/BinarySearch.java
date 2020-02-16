@@ -140,8 +140,10 @@ public class BinarySearch<T> implements Search<T> {
             }
         }
 
-        System.out.println("Start: " + startIndex + " | End: " + endIndex);
-
         return startIndex;
+    }
+
+    private int findRightmostMatch(List<T> elements, T valueToFind) {
+        return 0;
     }
 }
