@@ -57,4 +57,20 @@ public class BinarySearchFindLeftmostMatchUnitTest extends AbstractUnitTest<Bina
         assertEquals("Ensure that the method correctly indicates the location of the single value",
                 0, result);
     }
+
+    /**
+     * Test that, if the required element does not actually exist in the provided list, then a value of -1 will be
+     * returned to indicate this fact.
+     *
+     * @throws PrivateTestMethodException
+     */
+    @Test
+    public void testNoElementFound() throws PrivateTestMethodException {
+        int result = (Integer) this.executePrivateMethod("findLeftmostMatch",
+                new Class[]{List.class, Object.class},
+                new Object[]{TEST_ELEMENTS, 9});
+
+        assertEquals("Ensure that the method correctly indicates the fact that the value is missing",
+                -1, result);
+    }
 }

@@ -140,7 +140,13 @@ public class BinarySearch<T> implements Search<T> {
             }
         }
 
-        return startIndex;
+        // Value Existence Test
+        int result = startIndex;
+        if (!equalityComparator.compare(elements.get(result), valueToFind)) {
+            result = -1;
+        }
+
+        return result;
     }
 
     private int findRightmostMatch(List<T> elements, T valueToFind) {
