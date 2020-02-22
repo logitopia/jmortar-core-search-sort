@@ -150,7 +150,9 @@ public class BinarySearch<T> implements Search<T> {
         while (startIndex < endIndex) {
             int midPointIndex = startIndex + ((endIndex - startIndex) / 2);
 
+            System.out.println("Start [" + startIndex + "] : End [" + endIndex + "] : Mid [" + midPointIndex + "]");
             T middleElement = elements.get(midPointIndex);
+            System.out.println(" = target < mid [" + lessThanComparator.compare(valueToFind, middleElement) + "]");
             if (lessThanComparator.compare(valueToFind, middleElement)) {
                 endIndex = midPointIndex;
             } else {
@@ -158,6 +160,12 @@ public class BinarySearch<T> implements Search<T> {
             }
         }
 
-        return endIndex -1;
+        // Value Existence Test
+        int result = endIndex - 1;
+        if (!equalityComparator.compare(elements.get(result), valueToFind)) {
+            result = -1;
+        }
+
+        return result;
     }
 }

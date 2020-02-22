@@ -54,6 +54,6 @@ public class BinarySearchFindRightmostMatchUnitTest extends AbstractUnitTest<Bin
                 new Class[]{List.class, Object.class},
                 new Object[]{TEST_ELEMENTS, 9});
 
-        assertEquals("Successfully identified that the element was not found", 0, result);
+        assertEquals("Successfully identified that the element was not found", -1, result);
     }
 }
