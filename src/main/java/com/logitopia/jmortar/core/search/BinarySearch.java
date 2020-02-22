@@ -150,9 +150,7 @@ public class BinarySearch<T> implements Search<T> {
         while (startIndex < endIndex) {
             int midPointIndex = startIndex + ((endIndex - startIndex) / 2);
 
-            System.out.println("Start [" + startIndex + "] : End [" + endIndex + "] : Mid [" + midPointIndex + "]");
             T middleElement = elements.get(midPointIndex);
-            System.out.println(" = target < mid [" + lessThanComparator.compare(valueToFind, middleElement) + "]");
             if (lessThanComparator.compare(valueToFind, middleElement)) {
                 endIndex = midPointIndex;
             } else {
