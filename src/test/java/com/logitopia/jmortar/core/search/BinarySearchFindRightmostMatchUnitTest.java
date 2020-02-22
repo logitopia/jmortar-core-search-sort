@@ -41,4 +41,19 @@ public class BinarySearchFindRightmostMatchUnitTest extends AbstractUnitTest<Bin
         assertEquals("Successfully identified the leftmost element where duplicates exist",
                 9, result);
     }
+
+    /**
+     * Test that, when searching for the right-most element of a value that does not exist in the given list, the
+     * response correctly identifies that the element is not present.
+     *
+     * @throws PrivateTestMethodException
+     */
+    @Test
+    public void testElementNotFound() throws PrivateTestMethodException {
+        int result = (Integer) this.executePrivateMethod("findRightmostMatch",
+                new Class[]{List.class, Object.class},
+                new Object[]{TEST_ELEMENTS, 9});
+
+        assertEquals("Successfully identified that the element was not found", 0, result);
+    }
 }
