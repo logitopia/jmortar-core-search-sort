@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A 'binary' implementation of {@link Search} works by taking an <b>ordered</b> data set and identifying which
@@ -22,6 +24,10 @@ public class BinarySearch<T> implements Search<T> {
 
     private Comparator<T> lessThanComparator;
 
+    private long searchTimeout = 5;
+
+    private TimeUnit searchTimeoutUnit = TimeUnit.MINUTES;
+
     /**
      * Default Constructor. Creates an instance of the {@link Search} with the required equality comparator. The
      * comparator will verify whether an element in a list is equal to the object being searched for. Using a
@@ -35,8 +41,37 @@ public class BinarySearch<T> implements Search<T> {
      */
     public BinarySearch(Comparator<T> equalityComparator,
                         Comparator<T> lessThanComparator) {
+        this(equalityComparator, lessThanComparator, null, null);
+    }
+
+    /**
+     * Custom Timeout Constructor. Creates an instance of the {@link Search} with the required comparators. This
+     * constructor also allows for a larger timeout specification for searching larger datasets.
+     *
+     * @param equalityComparator A comparator that will be used to determine if the search value is equal to a
+     *                           specified element in the list.
+     * @param lessThanComparator A comparator that will be used to determine if the search value is less than a
+     *                           specified element in the list.
+     * @param searchTimeout      The amount of time taken before the {@link BinarySearch#findMatches(List, Object)}
+     *                          method
+     *                           times out. This can be used to calibrate the timeout when you have a large number of
+     *                           matches in a particularly large and/or complex dataset.
+     * @param timeoutUnit        The time unit to apply to the provided <tt>searchTimeout</tt>.
+     */
+    public BinarySearch(Comparator<T> equalityComparator,
+                        Comparator<T> lessThanComparator,
+                        Long searchTimeout,
+                        TimeUnit timeoutUnit) {
         this.equalityComparator = equalityComparator;
         this.lessThanComparator = lessThanComparator;
+
+        if (searchTimeout != null) {
+            this.searchTimeout = searchTimeout;
+        }
+
+        if (timeoutUnit != null) {
+            this.searchTimeoutUnit = timeoutUnit;
+        }
     }
 
     /**
@@ -96,7 +131,16 @@ public class BinarySearch<T> implements Search<T> {
         }
 
         ExecutorService searchExecutor = Executors.newFixedThreadPool(2);
-        // TODO - Run the left and right element searches in separate threads.
+        Future<Integer> lowerBound = searchExecutor.submit(() -> findLeftmostMatch(elements, valueToFind));
+        Future<Integer> upperBound = searchExecutor.submit(() -> findRightmostMatch(elements, valueToFind));
+        searchExecutor.shutdown();
+
+        try {
+            searchExecutor.awaitTermination(this.searchTimeout, this.searchTimeoutUnit);
+        } catch (InterruptedException e) {
+            searchExecutor.shutdownNow();
+
+        }
 
         // TODO - Analyse and return the result.
         // IF -1 then return empty else get ALL elements between the left and the right index.
