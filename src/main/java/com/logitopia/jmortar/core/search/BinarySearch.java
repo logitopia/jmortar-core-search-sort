@@ -81,9 +81,13 @@ public class BinarySearch<T> implements Search<T> {
 
     /**
      * {@inheritDoc}
+     *
+     * This method is <tt>synchronized</tt> for performance reasons. In order to search the lower and upper bounds as
+     * quickly as possible, they are run in separate threads of execution. To prevent the number of created threads
+     * getting out of control this method is therefore synchronized.
      */
     @Override
-    public List<Integer> findMatches(List<T> elements, T valueToFind) {
+    public synchronized List<Integer> findMatches(List<T> elements, T valueToFind) {
         List<Integer> result = new ArrayList<>();
 
         if (elements.size() == 0) {
@@ -91,36 +95,11 @@ public class BinarySearch<T> implements Search<T> {
             return result;
         }
 
-        /* TODO - This is in-efficient! Just check the length of the list upfront, let the left and right checks
-        *   determine if the element is present and let the consumer decide whether they want to run this check
-        * up-front*/
-        int index = findMatch(elements, valueToFind);
+        ExecutorService searchExecutor = Executors.newFixedThreadPool(2);
+        // TODO - Run the left and right element searches in separate threads.
 
-        if (index == -1) {
-            // The element wasn't found in the given list of elements - fail fast
-            return result;
-        }
-
-        // TODO - Do it serially first
-//        ExecutorService searchExecutor = Executors.newFixedThreadPool(2);
-
-        // The value was found. Let's search for duplicates..
-        // 1] Find first occurrence...
-        int startIndex = 0;
-        /* This won't work as there is no guarantee that the binary search on upper and lower
-         * bounds will find the final (end) element.
-         * Instead we should use an exponential search (implement that search first, so that we
-         * can re-use it here.
-         */
-        search(startIndex, index, elements, valueToFind);
-        // TODO - Work out how to check the prior value correctly..
-        // TODO - Keep going left until we don't match anymore...
-
-        // 2] Find last occurrence...
-        int endIndex = elements.size() - 1;
-        search(index, endIndex, elements, valueToFind);
-        // TODO - Work out how to check the prior value correctly..
-        // TODO - Keep going right until we don't match anymore...
+        // TODO - Analyse and return the result.
+        // IF -1 then return empty else get ALL elements between the left and the right index.
 
         return result;
     }
