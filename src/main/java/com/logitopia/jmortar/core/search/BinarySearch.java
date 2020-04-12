@@ -203,15 +203,13 @@ public class BinarySearch<T> implements Search<T> {
         return result;
     }
 
-    private int getBound(Future<Integer> futureWithBound) {
+    private int getBound(Future<Integer> futureWithBound)
+            throws ParallelizedSearchStoppedException {
         int result = -1;
         try {
             result = futureWithBound.get();
-        } catch (InterruptedException e) {
-            // TODO - Need a domain exception here for either scenario
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new ParallelizedSearchStoppedException(e);
         }
         return result;
     }
