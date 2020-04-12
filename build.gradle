@@ -3,7 +3,6 @@ import groovy.json.JsonBuilder
 
 plugins {
     id 'java-library'
-    id 'maven'
     id 'maven-publish'
     id 'jacoco'
     id 'com.jfrog.bintray' version '1.8.4'
@@ -31,7 +30,7 @@ bintray {
 }
 
 repositories {
-    maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "https://repo.maven.apache.org/maven2" }
     maven { url  "https://dl.bintray.com/logitopia/jmortar-release" }
 
     mavenLocal()
@@ -53,10 +52,10 @@ publishing {
 }
 
 dependencies {
-    compile 'org.slf4j:slf4j-log4j12:1.7.25'
-    compile 'com.google.guava:guava:28.0-jre'
-    testCompile 'junit:junit:4.12'
-    testCompile 'com.logitopia:jmortar-core-test:1.1.0'
+    implementation 'org.slf4j:slf4j-log4j12:1.7.25'
+    implementation 'com.google.guava:guava:28.0-jre'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'com.logitopia:jmortar-core-test:1.1.0'
 }
 
 // Run the unit tests (will run by default every time a build happens
