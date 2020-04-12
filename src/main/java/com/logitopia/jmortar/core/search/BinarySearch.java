@@ -4,10 +4,7 @@ import com.logitopia.jmortar.core.comparator.Comparator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * A 'binary' implementation of {@link Search} works by taking an <b>ordered</b> data set and identifying which
@@ -141,12 +138,19 @@ public class BinarySearch<T> implements Search<T> {
         } catch (InterruptedException e) {
             searchExecutor.shutdownNow();
             throw new ParallelizedSearchStoppedException(e);
-            // TODO - Need to add a 'domain' exception here that can be thrown if there is an unrecoverable issue
-            //  during search (i.e. SearchException)
         }
 
-        // TODO - Analyse and return the result.
-        // IF -1 then return empty else get ALL elements between the left and the right index.
+        // Verify positive bounds and extrapolate the result
+        int lower = getBound(lowerBound);
+        int upper = getBound(upperBound);
+
+        if (lower == -1 || upper == -1) {
+            return result;
+        }
+
+        for (int position = lower; position < upper; position++) {
+            result.add(position);
+        }
 
         return result;
     }
@@ -196,6 +200,19 @@ public class BinarySearch<T> implements Search<T> {
             result = -1;
         }
 
+        return result;
+    }
+
+    private int getBound(Future<Integer> futureWithBound) {
+        int result = -1;
+        try {
+            result = futureWithBound.get();
+        } catch (InterruptedException e) {
+            // TODO - Need a domain exception here for either scenario
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 }
