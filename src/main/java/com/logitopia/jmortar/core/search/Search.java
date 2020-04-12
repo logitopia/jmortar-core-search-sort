@@ -20,7 +20,9 @@ public interface Search<T> {
     int findMatch(List<T> elements, T valueToFind);
 
     /**
-     * Find all of the elements that match a specific value from the given list of elements.
+     * Find all of the elements that match a specific value from the given list of elements. This is particularly
+     * useful when you have a set of complex elements (i.e. objects) that have common, searchable elements, and
+     * differing elements.
      *
      * @param elements    A list of the elements that we wish to search through.
      * @param valueToFind A specific value that we want to find in the given list.
