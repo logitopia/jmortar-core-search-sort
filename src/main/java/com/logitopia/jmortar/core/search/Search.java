@@ -25,6 +25,8 @@ public interface Search<T> {
      * @param elements    A list of the elements that we wish to search through.
      * @param valueToFind A specific value that we want to find in the given list.
      * @return A {@link List} of the positions matching the given element.
+     * @throws ParallelizedSearchStoppedException when a parallelized search was stopped prematurely.
      */
-    List<Integer> findMatches(List<T> elements, T valueToFind);
+    List<Integer> findMatches(List<T> elements, T valueToFind)
+            throws ParallelizedSearchStoppedException;
 }

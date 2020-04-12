@@ -122,7 +122,8 @@ public class BinarySearch<T> implements Search<T> {
      * getting out of control this method is therefore synchronized.
      */
     @Override
-    public synchronized List<Integer> findMatches(List<T> elements, T valueToFind) {
+    public synchronized List<Integer> findMatches(List<T> elements, T valueToFind)
+            throws ParallelizedSearchStoppedException {
         List<Integer> result = new ArrayList<>();
 
         if (elements.size() == 0) {
@@ -139,7 +140,9 @@ public class BinarySearch<T> implements Search<T> {
             searchExecutor.awaitTermination(this.searchTimeout, this.searchTimeoutUnit);
         } catch (InterruptedException e) {
             searchExecutor.shutdownNow();
-
+            throw new ParallelizedSearchStoppedException(e);
+            // TODO - Need to add a 'domain' exception here that can be thrown if there is an unrecoverable issue
+            //  during search (i.e. SearchException)
         }
 
         // TODO - Analyse and return the result.
