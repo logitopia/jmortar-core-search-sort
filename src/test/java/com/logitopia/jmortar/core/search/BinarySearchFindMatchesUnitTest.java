@@ -27,7 +27,7 @@ public class BinarySearchFindMatchesUnitTest {
     }
 
     @Test
-    public void testBasicSuccess() {
+    public void testBasicSuccess() throws ParallelizedSearchStoppedException {
         List<Integer> results = subject.findMatches(TEST_ELEMENTS, 12);
         assertNotNull("Is the result list null?", results);
     }
