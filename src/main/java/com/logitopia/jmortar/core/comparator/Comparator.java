@@ -2,9 +2,9 @@ package com.logitopia.jmortar.core.comparator;
 
 /**
  * Specifies the behavior for an implementation that compares one value to another of a specific type. This can be
- * used by sorts to ensure ordering and correct comparison of more complex types.
+ * used by sorts and searches.
  *
- * @param <T> The object that is being compared.
+ * @param <T> The type of objects that are being compared.
  */
 public interface Comparator<T> {
 

@@ -36,13 +36,13 @@ public class ParallelMergeSortMergeSortedListsUnitTest extends AbstractUnitTest<
         second.add(7);
 
         Object resultObj = executePrivateMethod("mergeSortedLists",
-                new Class[] {List.class, List.class, Comparator.class},
-                new Object[] {first, second, (Comparator<Integer>) (a, b) -> a > b});
+                new Class[]{List.class, List.class, Comparator.class},
+                new Object[]{first, second, (Comparator<Integer>) (a, b) -> a > b});
 
         assertTrue("Is the result of the correct type?", resultObj instanceof List);
 
+        @SuppressWarnings("unchecked")
         List<Integer> result = (List<Integer>) resultObj;
-
         assertEquals("Does the list contain the correct number of results?", 4, result.size());
         testOrder(result);
     }
@@ -66,15 +66,16 @@ public class ParallelMergeSortMergeSortedListsUnitTest extends AbstractUnitTest<
         second.add(8);
 
         Object resultObj = executePrivateMethod("mergeSortedLists",
-                new Class[] {List.class, List.class, Comparator.class},
-                new Object[] {first, second, (Comparator<Integer>) (a, b) -> a > b});
+                new Class[]{List.class, List.class, Comparator.class},
+                new Object[]{first, second, (Comparator<Integer>) (a, b) -> a > b});
 
         assertTrue("Is the result of the correct type?", resultObj instanceof List);
 
+        @SuppressWarnings("unchecked")
         List<Integer> result = (List<Integer>) resultObj;
 
         assertEquals("Does the list contain the correct number of results?", 5, result.size());
-        verifyOrder(new int[] {1, 2, 3, 5, 8}, result);
+        verifyOrder(new int[]{1, 2, 3, 5, 8}, result);
     }
 
     @Test
@@ -89,19 +90,20 @@ public class ParallelMergeSortMergeSortedListsUnitTest extends AbstractUnitTest<
         second.add(3);
 
         Object resultObj = executePrivateMethod("mergeSortedLists",
-                new Class[] {List.class, List.class, Comparator.class},
-                new Object[] {first, second, (Comparator<Integer>) (a, b) -> a > b});
+                new Class[]{List.class, List.class, Comparator.class},
+                new Object[]{first, second, (Comparator<Integer>) (a, b) -> a > b});
 
         assertTrue("Is the result of the correct type?", resultObj instanceof List);
 
+        @SuppressWarnings("unchecked")
         List<Integer> result = (List<Integer>) resultObj;
 
         assertEquals("Does the list contain the correct number of results?", 5, result.size());
-        verifyOrder(new int[] {1, 2, 3, 5, 7}, result);
+        verifyOrder(new int[]{1, 2, 3, 5, 7}, result);
     }
 
     private void verifyOrder(int[] expected, List<Integer> result) {
-        for (int i=0; i < expected.length; i++) {
+        for (int i = 0; i < expected.length; i++) {
             assertEquals("Is the value at position " + (i + 1) + " expected?",
                     expected[i],
                     result.get(i).intValue());
@@ -118,15 +120,16 @@ public class ParallelMergeSortMergeSortedListsUnitTest extends AbstractUnitTest<
         second.add(3);
 
         Object resultObj = executePrivateMethod("mergeSortedLists",
-                new Class[] {List.class, List.class, Comparator.class},
-                new Object[] {first, second, (Comparator<Integer>) (a, b) -> a > b});
+                new Class[]{List.class, List.class, Comparator.class},
+                new Object[]{first, second, (Comparator<Integer>) (a, b) -> a > b});
 
         assertTrue("Is the result of the correct type?", resultObj instanceof List);
 
+        @SuppressWarnings("unchecked")
         List<Integer> result = (List<Integer>) resultObj;
 
         assertEquals("Does the list contain the correct number of results?", 3, result.size());
-        verifyOrder(new int[] {1, 2, 3}, result);
+        verifyOrder(new int[]{1, 2, 3}, result);
     }
 
     @Test
@@ -139,15 +142,16 @@ public class ParallelMergeSortMergeSortedListsUnitTest extends AbstractUnitTest<
         second.add(3);
 
         Object resultObj = executePrivateMethod("mergeSortedLists",
-                new Class[] {List.class, List.class, Comparator.class},
-                new Object[] {first, second, (Comparator<Integer>) (a, b) -> a > b});
+                new Class[]{List.class, List.class, Comparator.class},
+                new Object[]{first, second, (Comparator<Integer>) (a, b) -> a > b});
 
         assertTrue("Is the result of the correct type?", resultObj instanceof List);
 
+        @SuppressWarnings("unchecked")
         List<Integer> result = (List<Integer>) resultObj;
 
         assertEquals("Does the list contain the correct number of results?", 3, result.size());
-        verifyOrder(new int[] {2, 3, 4}, result);
+        verifyOrder(new int[]{2, 3, 4}, result);
     }
 
     @Test
@@ -159,14 +163,15 @@ public class ParallelMergeSortMergeSortedListsUnitTest extends AbstractUnitTest<
         second.add(1);
 
         Object resultObj = executePrivateMethod("mergeSortedLists",
-                new Class[] {List.class, List.class, Comparator.class},
-                new Object[] {first, second, (Comparator<Integer>) (a, b) -> a > b});
+                new Class[]{List.class, List.class, Comparator.class},
+                new Object[]{first, second, (Comparator<Integer>) (a, b) -> a > b});
 
         assertTrue("Is the result of the correct type?", resultObj instanceof List);
 
+        @SuppressWarnings("unchecked")
         List<Integer> result = (List<Integer>) resultObj;
 
         assertEquals("Does the list contain the correct number of results?", 2, result.size());
-        verifyOrder(new int[] {1, 2}, result);
+        verifyOrder(new int[]{1, 2}, result);
     }
 }
