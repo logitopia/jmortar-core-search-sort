@@ -5,4 +5,12 @@ package com.logitopia.jmortar.core.input;
  * cannot be determined from it (i.e. null input).
  */
 public class InvalidInputException extends Exception {
+
+    public InvalidInputException(String message) {
+        super(message);
+    }
+
+    public InvalidInputException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
