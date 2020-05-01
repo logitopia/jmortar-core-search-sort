@@ -51,7 +51,7 @@ public class BinarySearch<T> implements Search<T> {
      * @param lessThanComparator A comparator that will be used to determine if the search value is less than a
      *                           specified element in the list.
      * @param searchTimeout      The amount of time taken before the {@link BinarySearch#findMatches(List, Object)}
-     *                          method
+     *                           method
      *                           times out. This can be used to calibrate the timeout when you have a large number of
      *                           matches in a particularly large and/or complex dataset.
      * @param timeoutUnit        The time unit to apply to the provided <tt>searchTimeout</tt>.
