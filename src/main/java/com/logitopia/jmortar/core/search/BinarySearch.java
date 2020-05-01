@@ -1,6 +1,7 @@
 package com.logitopia.jmortar.core.search;
 
 import com.logitopia.jmortar.core.comparator.Comparator;
+import com.logitopia.jmortar.core.request.SearchRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,10 @@ public class BinarySearch<T> implements Search<T> {
      * {@inheritDoc}
      */
     @Override
-    public int findMatch(List<T> elements, T valueToFind) {
+    public int findMatch(SearchRequest<T> searchRequest) {
+        List<T> elements = searchRequest.getElements();
+        T valueToFind = searchRequest.getValueToFind();
+
         int startIndex = 0;
         int endIndex = elements.size() - 1;
         return search(startIndex, endIndex, elements, valueToFind);
@@ -119,8 +123,11 @@ public class BinarySearch<T> implements Search<T> {
      * getting out of control this method is therefore synchronized.
      */
     @Override
-    public synchronized List<Integer> findMatches(List<T> elements, T valueToFind)
+    public synchronized List<Integer> findMatches(SearchRequest<T> searchRequest)
             throws ParallelizedSearchStoppedException {
+        List<T> elements = searchRequest.getElements();
+        T valueToFind = searchRequest.getValueToFind();
+
         List<Integer> result = new ArrayList<>();
 
         if (elements.size() == 0) {
