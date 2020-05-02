@@ -17,6 +17,9 @@ public interface InputValidator<T> {
      * @param elements The elements that we wish to sort or search.
      * @return A flag indicating whether the element has passed validation or not. A 'true' value represents a
      * successful validation.
+     *
+     * @throws MissingInputException thrown when the provided input is 'missing'.
+     * @throws EmptyInputException thrown when the provided input is 'empty'.
      */
-    boolean validateElements(List<T> elements);
+    boolean validateElements(List<T> elements) throws MissingInputException, EmptyInputException;
 }
